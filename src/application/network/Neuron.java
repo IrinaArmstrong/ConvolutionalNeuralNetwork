@@ -2,6 +2,7 @@ package application.network;
 
  /*Class that realizes single neuron structure.*/
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Neuron {
@@ -27,17 +28,25 @@ public class Neuron {
     // Rate of learning or a step of grad descending
     private double learningRate;
 
-    // Constructor, that init weights, bias as random numbers (at first time using neuron)
-    public Neuron( int dendritNumber) {
+    // Constructor, that init weights, bias as 1, for the input layer's neurons (at first time using neuron)
+    public Neuron() {
+        this.dendritNumber = 1;
+        this.bias = 0;
+        this.dendritWeights = new double[this.dendritNumber];
+        this.dendritWeights[0] = 1;
+        this.error = 0.0;
+        this.output = hyperbolicTangent();
+    }
+
+    // Constructor, that init weights, bias as numbers got from the kernel (at first time using neuron)
+    public Neuron(int dendritNumber, double[][] kernel, int step) {
         this.dendritNumber = dendritNumber;
         Random random = new Random();
         this.bias = random.nextDouble();
         this.dendritWeights = new double[this.dendritNumber];
-        for (int i = 0; i < dendritNumber; i++)  {
-            this.dendritWeights[i] = random.nextDouble();
-        }
+        this.initWeights(kernel, step);
         this.error = 0.0;
-        this.output = sigmoid();
+        this.output = hyperbolicTangent();
     }
 
     // Activation (sigmoid) function
@@ -49,6 +58,84 @@ public class Neuron {
     // Derivate of sigmoid function
     private double derivateSigmoid() {
         return sigmoid() * (1 - sigmoid());
+    }
+
+    // Activation (hyperbolic tangent) function
+    private double hyperbolicTangent()  {
+        double tanh = (Math.exp(2 * this.weightsOutputsSumm) - 1) / (Math.exp(2 * this.weightsOutputsSumm + 1));
+        return tanh;
+    }
+
+    // Derivate of hyperbolic tangent function
+    private double derivateHyperbolicTangent() {
+        return 1 - hyperbolicTangent() * hyperbolicTangent();
+    }
+
+    // Initialize dendrits weights of neuron from the kernel coefficients
+    // todo: init weights algorithm!!!! - ????
+    public void initWeights(double[][] kernel, int step)  {
+
+        /*int stepCount = (dendritNumber - kernel.length) / step + 1;
+        for (int s = 0; s < stepCount; s++)  {}*/
+        for (int d = 0; d < dendritNumber; d++)  {
+
+            for (int i = 0; i < kernel.length; i++)  {
+                for (int j = 0; j < kernel.length; j++)  {
+                    this.dendritWeights[d] = kernel[i][j];
+                }
+            }
+
+        }
+    }
+
+    // Give output signal to next layer's neurons
+    public double getOutputSignal() {
+        return output;
+    }
+
+    // Count and set output signal
+    public void setOutput() {
+        this.output = hyperbolicTangent();
+    }
+
+    // Get input signal to the neuron of FIRST LAYER
+    public void getInputSygnal(double inputSignal)  {
+        this.weightsOutputsSumm = inputSignal;
+        this.setOutput();
+    }
+
+    // Get signals on dendrits from previous layer
+    public void getSignals(double[] prevOutputs)  {
+        for (int i = 0; i < dendritNumber; i++)  {
+            this.weightsOutputsSumm += prevOutputs[i] * this.dendritWeights[i];
+        }
+        this.weightsOutputsSumm += this.bias;
+        this.setOutput();
+    }
+
+
+
+
+
+
+    // Print state of neuron
+    public void printStateNeuron() {
+        System.out.println("Dendrit number = "+ dendritNumber + "\n");
+        int cnt = 0;
+        double prevLayerNeuronsNumber = Math.sqrt(dendritNumber);
+        for (int i = 0; i < prevLayerNeuronsNumber; i++)  {
+            for (int j = 0; j < prevLayerNeuronsNumber; j++)  {
+                System.out.print(dendritWeights[cnt]);
+                cnt++;
+            }
+            System.out.println();
+        }
+        System.out.println("Bias = " + bias);
+        System.out.println("Weights summ = " + weightsOutputsSumm);
+        System.out.println("Error = " + error);
+        System.out.println("Output = " + output);
+        System.out.println("Tanh = " + this.hyperbolicTangent());
+        System.out.println("Deriviate tanh = " + this.derivateHyperbolicTangent());
     }
 
 }

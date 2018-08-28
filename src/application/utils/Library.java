@@ -32,7 +32,7 @@ public class Library {
             for (int col = 0; col < width; col++) {
                 pixels[row][col] = image.getRGB(col, row);
                 Color colorOfPixel = new Color(image.getRGB(col, row));
-                int rgb = (colorOfPixel.getBlue() + colorOfPixel.getGreen() + colorOfPixel.getRed()) / 765;
+                int rgb =  (colorOfPixel.getBlue() + colorOfPixel.getGreen() + colorOfPixel.getRed()) / 765;
                 pixels[row][col] = rgb;
             }
         }
