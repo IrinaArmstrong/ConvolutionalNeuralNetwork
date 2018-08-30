@@ -5,6 +5,7 @@ import java.util.Random;
 public class Kernel {
 
     private double[][] kernel;
+    private double bias;
 
     // Constructor, that init kernel coefficients as random numbers (at first time creating kernel)
     public Kernel(int size) {
@@ -15,6 +16,7 @@ public class Kernel {
                 this.kernel[i][j] = random.nextDouble();
             }
         }
+        this.bias = random.nextDouble();
     }
 
     public double[][] getKernel() {
@@ -34,5 +36,18 @@ public class Kernel {
     // Get element of kernel
     public double getKernelElement(int row, int col)  {
         return this.kernel[row][col];
+    }
+
+    // Print state of kernel
+    public void printStateKernel() {
+        System.out.println("Kernel: ");
+        System.out.println("Kernel size = "+ kernel.length + "*" + kernel.length + "\n");
+        for (int i = 0; i < kernel.length; i++)  {
+            for (int j = 0; j < kernel.length; j++)  {
+                System.out.print(kernel[i][j] + " ");
+            }
+        }
+        System.out.println("Bias = " + bias);
+
     }
 }

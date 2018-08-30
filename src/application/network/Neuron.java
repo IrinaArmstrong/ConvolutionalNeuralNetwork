@@ -10,6 +10,9 @@ public class Neuron {
     // Number of dendrits
     private int dendritNumber;
 
+    // Number of this neuron in the layer
+    private int neuronNumber;
+
     // Summ of weights * outputs from previous layer = z
     private double weightsOutputsSumm;
 
@@ -28,9 +31,26 @@ public class Neuron {
     // Rate of learning or a step of grad descending
     private double learningRate;
 
+    // Constructor, that init weights, bias as random numbers, for the full connected layer's neurons (at first time using neuron)
+    // As parameter gets а number of this neuron in the layer
+    public Neuron( int dendritNumber, int neuronNumber) {
+        this.dendritNumber = dendritNumber;
+        this.neuronNumber = neuronNumber;
+        Random random = new Random();
+        this.bias = random.nextDouble();
+        this.dendritWeights = new double[this.dendritNumber];
+        for (int i = 0; i < dendritNumber; i++)  {
+            this.dendritWeights[i] = random.nextDouble();
+        }
+        this.error = 0.0;
+        this.output = hyperbolicTangent();
+    }
+
     // Constructor, that init weights, bias as 1, for the input layer's neurons (at first time using neuron)
-    public Neuron() {
+    // As parameter gets а number of this neuron in the layer
+    public Neuron(int neuronNumber) {
         this.dendritNumber = 1;
+        this.neuronNumber = neuronNumber;
         this.bias = 0;
         this.dendritWeights = new double[this.dendritNumber];
         this.dendritWeights[0] = 1;
@@ -39,12 +59,13 @@ public class Neuron {
     }
 
     // Constructor, that init weights, bias as numbers got from the kernel (at first time using neuron)
-    public Neuron(int dendritNumber, double[][] kernel, int step) {
+    public Neuron(int dendritNumber, Kernel kernel, int step, int neuronNumber) {
         this.dendritNumber = dendritNumber;
+        this.neuronNumber = neuronNumber;
         Random random = new Random();
         this.bias = random.nextDouble();
         this.dendritWeights = new double[this.dendritNumber];
-        this.initWeights(kernel, step);
+        this.initWeights(kernel.getKernel(), step);
         this.error = 0.0;
         this.output = hyperbolicTangent();
     }
@@ -72,17 +93,16 @@ public class Neuron {
     }
 
     // Initialize dendrits weights of neuron from the kernel coefficients
-    // todo: init weights algorithm!!!! - ????
     public void initWeights(double[][] kernel, int step)  {
-
-        /*int stepCount = (dendritNumber - kernel.length) / step + 1;
-        for (int s = 0; s < stepCount; s++)  {}*/
-        for (int d = 0; d < dendritNumber; d++)  {
+        int counter = 0;
+        while (counter < this.dendritNumber)  {
 
             for (int i = 0; i < kernel.length; i++)  {
                 for (int j = 0; j < kernel.length; j++)  {
-                    this.dendritWeights[d] = kernel[i][j];
+                    this.dendritWeights[counter + this.neuronNumber] = kernel[i][j];
+                    counter++;
                 }
+                counter += step;
             }
 
         }

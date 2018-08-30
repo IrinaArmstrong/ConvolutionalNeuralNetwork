@@ -26,11 +26,12 @@ public class InputLayer implements Layer {
         return this.neuronsNumber;
     }
 
+    // Creating neurons of this layer
     @Override
     public void createNeurons() {
         this.neurons = new Neuron[this.neuronsNumber];
         for (int i = 0; i < this.neuronsNumber; i++)  {
-            this.neurons[i] = new Neuron();
+            this.neurons[i] = new Neuron(i);
         }
     }
 
@@ -70,6 +71,7 @@ public class InputLayer implements Layer {
 
     }
 
+    // Print state of layer
     @Override
     public void printStateLayer() {
         System.out.println("Input layer:");
