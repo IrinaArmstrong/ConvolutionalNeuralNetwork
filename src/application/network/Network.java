@@ -53,7 +53,7 @@ public class Network {
             else {
                 if (kernelsInLayers[i] != 0)  {
                     ArrayList<Kernel> kernelsInCurrLayer = new ArrayList<>();
-                    for (int k = 0; k < kernelsInLayers[i]; k++)  {
+                    for (int k = 0; k < kernelsInLayers[i] + 1; k++)  {
                         Kernel kernel = new Kernel(kernelsParams[i]);
                         kernelsInCurrLayer.add(kernel);
                     }
@@ -84,7 +84,75 @@ public class Network {
 
     // Learning method
     public double[] learn(ArrayList<TaskAnswerPair> tasks, double learningRate, int iterations)  {
+
+        // Get array of right answers
+        double[] answers = new double[tasks.size()];
+        System.out.println("Answers: ");
+        for (int i = 0; i < tasks.size(); i++)  {
+            answers[i] = tasks.get(i).getNumber();
+            System.out.print(answers[i] + "; ");
+        }
+
+        // Iterate chosen number of times
+        /*for (int iter = 0; iter < iterations; iter++)  {}*/
+
+        // Go through all tasks from the set
+        for (int taskNum = 0; taskNum < tasks.size(); taskNum++)  {
+
+            // Create answer
+            double[] answer = new double[neuronsInLayers[layersNumber - 1]];
+            for (int i = 0; i < answer.length; i++)  {
+                if (i == answers[taskNum]) answer[i] = 1;
+                else answer[i] = 0.0;
+            }
+
+            // Tasks to linear structure
+            int taskLenght = tasks.get(taskNum).getTask().length;
+            double[] task = new double[taskLenght * taskLenght];
+            int taskIterator = 0;
+            for (int row = 0; row < taskLenght; row++) {
+                for (int col = 0; col < taskLenght; col++) {
+                    task[taskIterator] = tasks.get(taskNum).getTask()[row][col];
+                    taskIterator++;
+                }
+            }
+
+            // Send signals through all layers
+            for (int i = 0; i < this.layersNumber; i++)  {
+                if (i == 0) this.layers[i].getInputSignalToLayer(task);
+                else {
+                    transmitSignals(i - 1, i);
+                }
+            }
+
+            // Send final signal from the last layer to the output
+            this.results = this.getOutputSignal();
+
+            printStateNetwork();
+
+        }
+
+
+
+
         return  results;
+    }
+
+    // Show state of weights in network
+    public void printStateNetwork()  {
+        System.out.println("Network: ");
+        /*layers[0].getNeurons()[0].printStateNeuron();*/
+        System.out.println("Layers: ");
+        for (int i = 0; i < layersNumber; i++) {
+            layers[i].printStateLayer();
+        }
+
+        double[] outputs = this.getOutputSignal();
+        System.out.println("Outputs: ");
+        for (int i = 0; i < outputs.length; i++) {
+            System.out.print(outputs[i] + "; ");
+        }
+        System.out.println();
     }
 
 }

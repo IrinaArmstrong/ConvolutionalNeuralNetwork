@@ -45,14 +45,28 @@ public class ConvolutionalLayer implements Layer {
     }
 
     // Creating neurons of this layer
+    // fixme!
     @Override
     public void createNeurons() {
+
         this.neurons = new Neuron[this.neuronsNumber];
+
         int offset = this.kernels.get(0).getKernel().length * this.kernels.get(0).getKernel().length;
-        for (int k = 1; k < this.kernels.size() + 1; k++)  {
+
+        /*for (int k = 1; k < this.kernels.size() + 1; k++)  {
             Kernel kernel = this.kernels.get(k - 1);
             for (int i = offset * (k - 1) + 1; i < offset * k + 1; i++)  {
                 this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
+                System.out.println("i = " + i);
+            }
+        }*/
+
+        int neuronCounter = 0;
+        for (int k = 0; k < this.kernels.size(); k++)  {
+            Kernel kernel = this.kernels.get(k);
+            for (int i = neuronCounter; i < this.neuronsNumber; i++)  {
+                this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
+                System.out.println("i = " + i + "  k = " + k);
             }
         }
 

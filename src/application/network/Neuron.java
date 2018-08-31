@@ -94,18 +94,27 @@ public class Neuron {
 
     // Initialize dendrits weights of neuron from the kernel coefficients
     public void initWeights(double[][] kernel, int step)  {
-        int counter = 0;
-        while (counter < this.dendritNumber)  {
 
+        // Init all weights with nulls
+        for (int n = 0; n < dendritNumber; n++)  {
+            this.dendritWeights[n] = 0;
+        }
+
+        // Init weights with kernel coefficients
+        int counter = 0;
+        //while (counter < this.dendritNumber)  {}
+            // fixme!
             for (int i = 0; i < kernel.length; i++)  {
                 for (int j = 0; j < kernel.length; j++)  {
+                    System.out.println("counter + neuronNumber = " + counter + this.neuronNumber);
                     this.dendritWeights[counter + this.neuronNumber] = kernel[i][j];
                     counter++;
                 }
                 counter += step;
             }
 
-        }
+
+
     }
 
     // Give output signal to next layer's neurons
