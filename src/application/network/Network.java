@@ -93,9 +93,6 @@ public class Network {
             System.out.print(answers[i] + "; ");
         }
 
-        // Iterate chosen number of times
-        /*for (int iter = 0; iter < iterations; iter++)  {}*/
-
         // Go through all tasks from the set
         for (int taskNum = 0; taskNum < tasks.size(); taskNum++)  {
 

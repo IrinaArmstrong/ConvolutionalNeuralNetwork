@@ -106,7 +106,7 @@ public class Neuron {
             // fixme!
             for (int i = 0; i < kernel.length; i++)  {
                 for (int j = 0; j < kernel.length; j++)  {
-                    System.out.println("counter + neuronNumber = " + counter + this.neuronNumber);
+                    //System.out.println("counter + neuronNumber = " + counter + " + " + this.neuronNumber + " = "+ (counter + neuronNumber));
                     this.dendritWeights[counter + this.neuronNumber] = kernel[i][j];
                     counter++;
                 }

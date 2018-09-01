@@ -61,7 +61,7 @@ public class Teacher {
     public void train()  {
 
         ArrayList<TaskAnswerPair> tasks = new ArrayList<>();
-        for (int j = 0; j < tasks.size(); j++)  {
+        for (int j = 0; j < this.numberOfTasks; j++)  {
             tasks.add(this.library.getOne());
         }
 

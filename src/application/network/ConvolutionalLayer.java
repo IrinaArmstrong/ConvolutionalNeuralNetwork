@@ -53,18 +53,10 @@ public class ConvolutionalLayer implements Layer {
 
         int offset = this.kernels.get(0).getKernel().length * this.kernels.get(0).getKernel().length;
 
-        /*for (int k = 1; k < this.kernels.size() + 1; k++)  {
-            Kernel kernel = this.kernels.get(k - 1);
-            for (int i = offset * (k - 1) + 1; i < offset * k + 1; i++)  {
-                this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
-                System.out.println("i = " + i);
-            }
-        }*/
-
-        int neuronCounter = 0;
         for (int k = 0; k < this.kernels.size(); k++)  {
             Kernel kernel = this.kernels.get(k);
-            for (int i = neuronCounter; i < this.neuronsNumber; i++)  {
+            int neuronCurrNumber = 0;
+            for (int i = neuronCurrNumber; i < (this.neuronsNumber / this.kernels.size()); i++)  {
                 this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
                 System.out.println("i = " + i + "  k = " + k);
             }
