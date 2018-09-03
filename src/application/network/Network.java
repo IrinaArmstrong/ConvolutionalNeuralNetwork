@@ -53,7 +53,8 @@ public class Network {
             else {
                 if (kernelsInLayers[i] != 0)  {
                     ArrayList<Kernel> kernelsInCurrLayer = new ArrayList<>();
-                    for (int k = 0; k < kernelsInLayers[i] + 1; k++)  {
+                    // fixme!
+                    for (int k = 0; k < kernelsInLayers[i]; k++)  {
                         Kernel kernel = new Kernel(kernelsParams[i]);
                         kernelsInCurrLayer.add(kernel);
                     }
@@ -113,6 +114,8 @@ public class Network {
                     taskIterator++;
                 }
             }
+
+            printStateNetwork();
 
             // Send signals through all layers
             for (int i = 0; i < this.layersNumber; i++)  {

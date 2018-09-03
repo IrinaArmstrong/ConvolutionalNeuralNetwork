@@ -2,7 +2,6 @@ package application.network;
 
  /*Class that realizes single neuron structure.*/
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Neuron {
@@ -102,8 +101,6 @@ public class Neuron {
 
         // Init weights with kernel coefficients
         int counter = 0;
-        //while (counter < this.dendritNumber)  {}
-            // fixme!
             for (int i = 0; i < kernel.length; i++)  {
                 for (int j = 0; j < kernel.length; j++)  {
                     //System.out.println("counter + neuronNumber = " + counter + " + " + this.neuronNumber + " = "+ (counter + neuronNumber));
@@ -133,7 +130,7 @@ public class Neuron {
         this.setOutput();
     }
 
-    // Get signals on dendrits from previous layer
+    // Get signals on dendrits from previous input layer
     public void getSignals(double[] prevOutputs)  {
         for (int i = 0; i < dendritNumber; i++)  {
             this.weightsOutputsSumm += prevOutputs[i] * this.dendritWeights[i];
@@ -142,8 +139,11 @@ public class Neuron {
         this.setOutput();
     }
 
+    // Get signals on dendrits from previous convolution layer to next convolution layer
+    //todo!!!
+    public void getConvolutionSignals(double[] prevOutputs, int imgSize)  {
 
-
+    }
 
 
 

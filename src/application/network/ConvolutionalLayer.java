@@ -9,6 +9,9 @@ public class ConvolutionalLayer implements Layer {
     // Number of this layer
     private int serialNumber;
 
+    // Number if images on previous layer
+    private int prevImagesNumber;
+
     // Number of neurons in this layer
     private int neuronsNumber;
 
@@ -45,10 +48,9 @@ public class ConvolutionalLayer implements Layer {
     }
 
     // Creating neurons of this layer
-    // fixme!
     @Override
     public void createNeurons() {
-
+        // fixme!
         this.neurons = new Neuron[this.neuronsNumber];
 
         int offset = this.kernels.get(0).getKernel().length * this.kernels.get(0).getKernel().length;
@@ -56,9 +58,10 @@ public class ConvolutionalLayer implements Layer {
         for (int k = 0; k < this.kernels.size(); k++)  {
             Kernel kernel = this.kernels.get(k);
             int neuronCurrNumber = 0;
+            System.out.println("this.neuronsNumber / this.kernels.size() = " + this.neuronsNumber / this.kernels.size());
             for (int i = neuronCurrNumber; i < (this.neuronsNumber / this.kernels.size()); i++)  {
                 this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
-                System.out.println("i = " + i + "  k = " + k);
+                //System.out.println("i = " + i + "  k = " + k);
             }
         }
 
@@ -77,9 +80,19 @@ public class ConvolutionalLayer implements Layer {
     // Get output signal from previous layer's neurons to this layer's neurons
     @Override
     public void getInputSignalToLayer(double[] outputSignals) {
-        for (int i = 0; i < this.neuronsNumber; i++)  {
-            this.neurons[i].getSignals(outputSignals);
+
+        /*if (prevImagesNumber != 1)  {
+            int imgSize = prevNeuronsNumber / prevImagesNumber;
+            for (int i = 0; i < this.neuronsNumber; i++)  {
+                this.neurons[i].getConvolutionSignals(outputSignals, imgSize);
+            }
         }
+        else {}*/
+            for (int i = 0; i < this.neuronsNumber; i++)  {
+                this.neurons[i].getSignals(outputSignals);
+
+        }
+
     }
 
     @Override
@@ -110,12 +123,12 @@ public class ConvolutionalLayer implements Layer {
             kernel.printStateKernel();
             kCounter++;
         }
-        int nCounter=0;
+        /*int nCounter=0;
         for (Neuron neyron : neurons) {
             System.out.println("");
             System.out.println("Neuron #" + nCounter);
             neyron.printStateNeuron();
             nCounter++;
-        }
+        }*/
     }
 }

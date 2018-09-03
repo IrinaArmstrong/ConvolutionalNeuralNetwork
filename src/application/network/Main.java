@@ -25,7 +25,7 @@ public class Main {
 
 // Testing network
         int[] neuronsInLayers = {841, 1014, 1250, 100, 10};
-        int[] kernelsInLayers = {0, 6, 6, 0, 0};
+        int[] kernelsInLayers = {0, 6, 50, 0, 0};
         int[] kernelsParams = {0, 5, 5, 0, 0};
         int step = 2;
         Teacher teacher = new Teacher(5, neuronsInLayers, 0.01, 100, 20,
