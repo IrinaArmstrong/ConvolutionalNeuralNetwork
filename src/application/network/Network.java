@@ -47,23 +47,32 @@ public class Network {
 
     // Create array of layers
     private void createLayers()  {
-        this.layers = new Layer[this.layersNumber];
+        // fixme!
+
         for (int i = 0; i < this.layersNumber; i++)  {
+
             if (i == 0) this.layers[i] = new InputLayer(this.neuronsInLayers[i]);
             else {
                 if (kernelsInLayers[i] != 0)  {
                     ArrayList<Kernel> kernelsInCurrLayer = new ArrayList<>();
-                    // fixme!
+
                     for (int k = 0; k < kernelsInLayers[i]; k++)  {
                         Kernel kernel = new Kernel(kernelsParams[i]);
                         kernelsInCurrLayer.add(kernel);
                     }
-                    this.layers[i] = new ConvolutionalLayer(i, neuronsInLayers[i], this.neuronsInLayers[i - 1], kernelsInCurrLayer, step);
+                    // If previous layer is input layer (int serialNumber, int prevNeuronsNumber, ArrayList<Kernel> kernels, int step)
+                    if (i == 1)  this.layers[i] = new ConvolutionalLayer(i, neuronsInLayers[i - 1], kernelsInCurrLayer, step);
+                    // If previous layer is convolution layer (int serialNumber, int prevFMNumber, int prevFMSize, ArrayList<Kernel> kernels, int step)
+                    else {
+                        int prevFMSize = (int) (Math.sqrt(layers[i - 1].getNeuronsNumber()) / this.kernelsInLayers[i - 1]) ;
+                        this.layers[i] = new ConvolutionalLayer(i, this.kernelsInLayers[i - 1], prevFMSize, kernelsInCurrLayer, step);
+                    }
                 }
                 else {
                     this.layers[i] = new FullyConnectedLayer(i, neuronsInLayers[i], this.neuronsInLayers[i - 1]);
                 }
             }
+
         }
     }
 

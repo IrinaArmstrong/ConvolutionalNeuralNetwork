@@ -19,8 +19,14 @@ public class Kernel {
         this.bias = random.nextDouble();
     }
 
+    // Get kernel
     public double[][] getKernel() {
         return kernel;
+    }
+
+    // Get size of kernel
+    public int getSize()  {
+        return this.kernel.length;
     }
 
     // Set whole kernel

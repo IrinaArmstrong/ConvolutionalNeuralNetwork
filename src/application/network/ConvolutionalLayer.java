@@ -9,8 +9,17 @@ public class ConvolutionalLayer implements Layer {
     // Number of this layer
     private int serialNumber;
 
-    // Number if images on previous layer
-    private int prevImagesNumber;
+    // Number of feature maps in this layer
+    public int featureMapsNumber;
+
+    // Size of it's feature map
+    public int featureMapSize;
+
+    // Number of feature maps on previous layer
+    private int prevFMNumber;
+
+    // Size of previous feature map
+    private int prevFMSize;
 
     // Number of neurons in this layer
     private int neuronsNumber;
@@ -24,14 +33,35 @@ public class ConvolutionalLayer implements Layer {
     // Kernels of this layer
     public ArrayList<Kernel> kernels;
 
+    // Feature maps of this layer
+    private FeatureMap[] featureMaps;
+
     // Step of convolution
     private int step;
 
-    // Constructor of this layer
-    public ConvolutionalLayer(int serialNumber, int neuronsNumber, int prevNeuronsNumber, ArrayList<Kernel> kernels, int step) {
+    // Constuctor #1, if previous layer is input layer
+    public ConvolutionalLayer(int serialNumber, int prevNeuronsNumber, ArrayList<Kernel> kernels, int step) {
         this.serialNumber = serialNumber;
-        this.neuronsNumber = neuronsNumber;
+        this.featureMapsNumber = kernels.size();
+        this.featureMapSize = (int) (Math.sqrt(prevNeuronsNumber) - kernels.get(0).getSize()) / step + 1;
+        this.prevFMNumber = 0;
+        this.prevFMSize = 0;
+        this.neuronsNumber = this.featureMapSize * this.featureMapSize * this.featureMapsNumber;
         this.prevNeuronsNumber = prevNeuronsNumber;
+        this.kernels = kernels;
+        this.step = step;
+        this.createNeurons();
+    }
+
+    // Constuctor #2, if previous layer is convolution layer
+    public ConvolutionalLayer(int serialNumber, int prevFMNumber, int prevFMSize, ArrayList<Kernel> kernels, int step) {
+        this.serialNumber = serialNumber;
+        this.prevNeuronsNumber = prevFMNumber * prevFMSize * prevFMSize;
+        this.featureMapsNumber = kernels.size();
+        this.featureMapSize = (int) (Math.sqrt(prevNeuronsNumber) - kernels.get(0).getSize()) / step + 1;
+        this.prevFMNumber = 0;
+        this.prevFMSize = 0;
+        this.neuronsNumber = this.featureMapSize * this.featureMapSize * this.featureMapsNumber;
         this.kernels = kernels;
         this.step = step;
         this.createNeurons();
@@ -47,12 +77,24 @@ public class ConvolutionalLayer implements Layer {
         return this.neuronsNumber;
     }
 
-    // Creating neurons of this layer
+    // Creating feature maps -> so then neurons of this layer
     @Override
     public void createNeurons() {
-        // fixme!
+        // todo: create this method!
         this.neurons = new Neuron[this.neuronsNumber];
+        for (int f = 0; f < this.featureMapsNumber; f++)  {
+            if (this.serialNumber == 1)  {
+                // (int serialNumber, int size, int prevNeuronsNumber, Kernel kernel)
+                this.featureMaps[f] = new FeatureMap(f, this.featureMapSize, this.prevNeuronsNumber, this.kernels.get(f));
+            }
+            else {
+                //  (int serialNumber, int size, int prevFMNumber, int prevFMSize, Kernel kernel)
+                this.featureMaps[f] = new FeatureMap(f, this.featureMapSize, this.prevFMNumber, this.prevFMSize, this.kernels.get(f));
+            }
 
+        }
+
+/*
         int offset = this.kernels.get(0).getKernel().length * this.kernels.get(0).getKernel().length;
 
         for (int k = 0; k < this.kernels.size(); k++)  {
@@ -63,7 +105,7 @@ public class ConvolutionalLayer implements Layer {
                 this.neurons[i] = new Neuron(prevNeuronsNumber, kernel, step, i);
                 //System.out.println("i = " + i + "  k = " + k);
             }
-        }
+        }*/
 
     }
 
